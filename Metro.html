@@ -1,0 +1,263 @@
+
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<title>Metro</title> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <style type="text/css">
+        </style>
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="a">
+
+	<div data-role="header" data-position="fixed">
+		<a href='#' class='ui-btn-left' data-icon='arrow-l' data-theme="c" onclick="history.back(); return false">Back</a> 
+		<h1>Metro</h1>
+	</div>
+
+	<div data-role="content">	
+				
+		<style>
+			.jump { line-height:1.5em;  }
+		</style>
+
+		<script>
+		function OpenUrl( url,type,choose )
+		{
+			if( navigator.userAgent.indexOf("Android")>-1 ) {
+				prompt( "#", "App.OpenUrl(\f"+url+"\f"+type+"\f"+choose );
+				return false;
+			}
+			else return true;
+		}
+		</script>
+		
+		<div align="center"><img src="Img/Metro.png" width=100></div>
+		<p>Metro is a support plugin for hybrid apps, it is a collection of useful functions to enhance your hybrid apps.</p>
+		<p>To use Metro, you must first load the plugin at the top of your script 
+		using the <b>LoadPlugin</b> method like this:</p>
+		
+		<div class="samp">&nbsp;app.LoadPlugin( "Metro" )</div>
+		
+		<p>Then an instanne of Metro is created, it injects its own methods into the <b>ui.Control</b> method to make the 
+		developer experience better, therefore you can access element specific methods normally, an example:</p>
+		
+		<div data-role="collapsible"  data-collapsed="true" data-mini="true" data-theme="a" data-content-theme="b">
+        <h3>Example - Main Application</h3>
+        <div id="examp1" class='code-js' style="font-size:70%">
+        <br>app.LoadPlugin('Metro')<br>
+        <b id="cfg">cfg.Portrait</b><br><br>
+
+        <b id="class-main" style="font-size:100%">
+        class Main extends App {<br>
+     
+        &nbsp;&nbsp;onStart() {<br>
+        
+        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain = ui.addLayout("main", "linear", "fillxy,vcenter");<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02, 0.02, 0.02, 0.02);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.txt = ui.addText(this.layMain, "My Hybrid App");<br><br>
+
+        
+        &nbsp;&nbsp;&nbsp;&nbsp;this.btn = ui.addButton(this.layMain, "My Button", "primary");<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.btn.setOnTouch(() => {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.btn.batch({<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text: 'Changed Text',<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textColor: 'green'<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;});<br><br>
+
+ 
+        &nbsp;&nbsp;&nbsp;&nbsp;this.btn2 = ui.addButton(this.layMain, "My Second Button", "outlined");<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;// Conditional Display Logic<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;let randomValue = false;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;$showIF(randomValue, this.btn, this.btn2);<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;// Enable Drag on Button with Stop Callback<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;$enableDrag(this.btn2, null, () => {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('Drag stopped');<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$disableDrag(this.btn2);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+        &nbsp;&nbsp;}<br><br>
+
+        &nbsp;&nbsp;onPause() {}<br><br>
+
+        &nbsp;&nbsp;onResume() {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.txt.text = 'You Left 😒';<br>
+        &nbsp;&nbsp;}<br>
+        }<br>
+        </b>
+    </div>
+    <div name="divCopy" align="right">
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(examp1)">Copy All</a>
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo(examp1)">&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a>
+    </div>
+</div>
+
+    <h2>Achieving Reactivity</h2>
+    
+    <h3>1. Signals Approach</h3>
+    <p> Signals have been used to achieve fine-grained reactivity, with the <b>$signal</b> function you can do the same too.</p>
+    <p> The <b>$signal</b> function returns a setter/ getter function called <b>.value</b> to set the value and notify your subscriber, which is set through the <b>.subscribe</b> function</p>
+    <p> An example below of how to use the <b>$signal</b> model in Metro:</p>
+    <br>
+    
+    <div data-role="collapsible" data-collapsed="true" data-mini="true" data-theme="a" data-content-theme="b">
+    <h3>Example - Using Signals</h3>
+    <div id="examp2" class='code-js' style="font-size:70%">
+        <b id="plugin-load">app.LoadPlugin('Metro')</b><br>
+        <b id="config">cfg.Portrait;</b><br><br>
+        
+        // Define Main Application Class<br>
+        <b id="class-main" style="font-size:100%">
+        class Main extends App {<br>
+        &nbsp;&nbsp;constructor() {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;super();<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain = ui.addLayout("main", "linear", "fillxy,vcenter");<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.txt = ui.addText(this.layMain, "My Hybrid App");<br>
+        &nbsp;&nbsp;}<br><br>
+
+        &nbsp;&nbsp;onStart() {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02, 0.02, 0.02, 0.02);<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;let btn = ui.addButton(this.layMain, "My Button", "tetiary");<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;// Initialize Signal for Theme Toggle<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;let theme = $signal("light");<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;// Subscribe to Signal for Theme Changes<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;theme.subscribe((output) => {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ui.setTheme(output);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;});<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;let btn2 = ui.addButton(this.layMain, "My Second Button", "outlined");<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;btn2.setOnTouch(() => {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Toggle Theme Value<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (theme.value == "light") theme.value = "dark";<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else theme.value = "light";<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
+        &nbsp;&nbsp;}<br>
+        }<br>
+        </b>
+    </div>
+    <div name="divCopy" align="right">
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(examp2)">Copy All</a>
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo(examp2)">&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a>
+    </div>
+</div>
+    
+    <h3>2. showIF Approach</h3>
+    
+    <p>The <b>$showIF</b> takes in a restingParameter, if it is true then the first container is shown and if not the second container is shown.</p>
+    <p>$showIF function has this syntax:</p>
+    <div class="samp2">&nbsp;$showIF(restingParameter, onTruthyElement, onFalslyElement)</div>
+    <p>An example of using $showIF is below:</p>
+    
+    <div data-role="collapsible" data-collapsed="true" data-mini="true" data-theme="a" data-content-theme="b">
+    <h3>Example - Using showIF</h3>
+    <div id="examp3" class='code-js' style="font-size:70%">
+        <b id="plugin-load">app.LoadPlugin('Metro')</b><br>
+        <b id="config">cfg.Portrait;</b><br><br>
+        
+        <b id="class-main" style="font-size:100%">
+        class Main extends App {<br>
+        &nbsp;&nbsp;constructor() {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;super();<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain = ui.addLayout("main", "linear", "fillxy,vcenter");<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.txt = ui.addText(this.layMain, "My Hybrid app");<br>
+        &nbsp;&nbsp;}<br><br>
+
+        &nbsp;&nbsp;onStart() {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02, 0.02, 0.02, 0.02);<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;let btn = ui.addButton(this.layMain, "My First Button", "primary");<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;let btn2 = ui.addButton(this.layMain, "My Second Button", "outlined");<br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;$showIF(false, btn, btn2);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;// only btn2 is shown<br>
+        &nbsp;&nbsp;}<br>
+        }<br>
+        </b>
+    </div>
+    <div name="divCopy" align="right">
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(samp2)">Copy Code</a>
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(examp3)">Copy All</a>
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo(examp3)">&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a>
+    </div>
+    
+</div>
+<br>
+
+    <h2>Adding Styles To Your Objects</h2>
+    
+    <p>You can add css to your <b>ui</b> object by using the <b>.css</b> prototype that is in every ui function</p>
+    <p>Your styles can be added in an object like manner (like React's Emotion) and as a template literal</p>
+    <p>Here is an example:</p>
+    
+    <div data-role="collapsible" data-collapsed="true" data-mini="true" data-theme="a" data-content-theme="b">
+    <h3>Example - Adding Styles</h3>
+    <div id="examp4" style="font-size:70%">
+        <b id="plugin-load">app.LoadPlugin('Metro')</b><br>
+        <b id="config">cfg.Portrait;</b><br><br>
+        
+        <b id="class-main" style="font-size:100%">
+        class Main extends App {<br>
+        &nbsp;&nbsp;constructor() {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;super();<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain = ui.addLayout("main", "linear", "fillxy,vcenter");<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.txt = ui.addText(this.layMain, "My Hybrid app");<br>
+        &nbsp;&nbsp;}<br><br>
+
+        &nbsp;&nbsp;onStart() {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02, 0.02, 0.02, 0.02);<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;let outlinedBtn = ui.addHTMLElement(this.layMain, "button", "", 0.5, -1);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;outlinedBtn.textContent = "Hello World";<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;outlinedBtn.css`<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;border: 2px solid #6200ea;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;color: #6200ea;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;background-color: transparent;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;font-family: "Archivo", sans-serif;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;font-weight: 500;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;font-size: 1rem;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;text-align: center;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;cursor: pointer;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;padding: 0.5rem 1rem;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;transition: background-color 0.3s, color 0.3s;<br><br>
+    
+        &nbsp;&nbsp;&nbsp;&nbsp;&amp;:hover {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color: #6200ea;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color: white;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&amp;:active {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color: #3700b3;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border-color: #3700b3;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}`<br>
+        &nbsp;&nbsp;&nbsp;}<br>
+        }
+        </b>
+    </div>
+    <div name="divCopy" align="right">
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy(examp4)">Copy All</a>
+        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo(examp4)">&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a>
+    </div>
+</div>
+
+		<br>
+		<p>
+			<i>External Links: <a onclick="return OpenUrl(this.href)" target="_blank" href="http://droidscript.org">droidscript.org</a></i>
+		</p>
+		
+	</div>
+	
+</div>
+
+</body>
+</html>
