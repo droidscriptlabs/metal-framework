@@ -4,8 +4,7 @@
 [![Version](https://img.shields.io/badge/version-0.0.2-brightgreen.svg)](CHANGELOG.md)
 [![Platform](https://img.shields.io/badge/platform-Android-blue.svg)](https://developer.android.com/)
 
-Metro is a DroidScript plugin for Enjine.IO Apps, It is used to enhance the developer experience while writing hybrid apps.
-
+Metro is a DroidScript plugin for Enjine.IO Apps, It is a support plugin for hybrid apps, it is a collection of useful function to enhance your hybrid apps.
 
 ## Installation
 
