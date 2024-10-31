@@ -9,7 +9,7 @@
 // MIT
 
 // @version 
-// 0.0.2
+// 0.0.3
 
 // @author
 // Oarabile Koore
@@ -23,6 +23,15 @@ $sysTheme = function(){
     if (darkThemeMq.matches) {
         return "dark";
     } else return "light";
+}
+
+/**
+ * attach event listeners to the document body.
+ * @param {HTMLEventListener} event 
+ * @param {Function} handlerFn 
+ */
+$on = function(event, handlerFn){
+    document.addEventListener(event, handlerFn)
 }
 
 /**
@@ -69,6 +78,140 @@ $signal = function(defaultValue = null){
     }
 }
 
+/**
+ * safe stringify alternative to JSON.stringify for objects with FiberRootNode (Mostly Found When Dealing With React)
+ * will be seen as you extract component info
+ * @param {object} obj 
+ */
+$stringify = function (obj) {
+    const seen = new WeakSet();
+    return JSON.stringify(obj, (key, value) => {
+        if (typeof value === "object" && value !== null) {
+            if (seen.has(value)) {
+                return; // Circular reference found
+            }
+            seen.add(value);
+        }
+        return value;
+    });
+}
+
+/**
+ * show a fallback view during an async operation, then swap it out when done.
+ * @param {asyncFunction} resource 
+ * @param {instanceOf<ui.Control>} fallback 
+ * @param {instanceOf<ui.Control>} controlInSuspension 
+ */
+const $suspense = (resource, fallback, controlInSuspension) => {
+    const subscriptions = [];
+
+    const notify = () => subscriptions.forEach(subscriber => subscriber());
+
+    if (controlInSuspension.type === 'Layout') {
+        if (!controlInSuspension.hasChild(fallback)) {
+            ui.showPopup(`FallBack is not a child of ${controlInSuspension}`, 'Long', '4500');
+            return;
+        }
+
+        const fallback_id = fallback._id;
+        const incremented_children_array = Object.keys(controlInSuspension.children)
+            .map(Number)
+            .map(childId => childId + 1);
+
+        const hideChildren = () => {
+            incremented_children_array.forEach(child_id => {
+                if (child_id !== fallback_id) {
+                    const element = document.getElementById('d' + child_id);
+                    if (element) element.style.display = 'none';
+                }
+            });
+        };
+
+        const showChildren = () => {
+            fallback.hide();
+            incremented_children_array.forEach(child_id => {
+                if (child_id !== fallback_id) {
+                    const element = document.getElementById('d' + child_id);
+                    if (element) element.style.display = 'block';
+                }
+            });
+        };
+
+        hideChildren();
+
+        Promise.resolve(resource())
+            .then(() => {
+                showChildren();
+                notify();
+            })
+            .catch(() => hideChildren());
+
+    } else {
+        fallback.show();
+        controlInSuspension.hide();
+
+        Promise.resolve(resource())
+            .then(() => {
+                fallback.hide();
+                controlInSuspension.show();
+                notify();
+            })
+            .catch(() => {
+                fallback.show();
+                controlInSuspension.hide();
+            });
+    }
+
+    return {
+        /**        
+         * call a function after the new view is added
+         * @param {Function} fn 
+         */
+        effects: fn => subscriptions.push(fn),
+    };
+};
+
+/**
+ * create your own ui control without having verbose code to write.
+ * @param {instanceOf<ui.Control>} parent 
+ * @param {HTMLElement} tag 
+ * @param {number} width 
+ * @param {number} height 
+ * @param {Object} properties 
+ * @param {String} options = '' 
+ */
+$component = function(parent, tag, width, height, properties, options = '') {
+    return new uiComponent(parent, tag, width, height, properties, options);
+};
+
+
+class uiComponent extends ui.Control {
+    constructor(parent, tag, width, height, properties = {}, options = ''){
+        super(parent, width, height, options)
+        
+        this._ctl = document.createElement(tag);
+
+        this._div.appendChild( this._ctl )
+        this.batch(properties) 
+    }
+    
+    // call the cssParser Function
+    css(styles){
+        const className = cssParser(styles);
+        this._ctl.classList.add(className);
+        return this;
+    }
+    
+    batch(updatesAsObject = {}){
+        Object.entries(updatesAsObject).forEach(([key, value]) => {
+            requestAnimationFrame(() => {
+                if (this) {
+                    this._ctl[key] = value;
+                }
+            });
+        });
+    }
+}
 
 let draggingEl;
 let isDragging = false;
@@ -165,6 +308,20 @@ ui.Control.prototype.batch = function(updatesAsObject){
             }
         });
      });
+    return this;
+}
+
+/**
+ * add an event listener to your element
+ * @param {HTMLEventListener} event 
+ * @param {Function} handlerFn 
+ */
+ui.Control.prototype.on = function(event, handlerFn){
+    if (!this._div){
+        console.log(`ui.Control Property Not Mounted`);
+        return;
+    }
+    this._div?.addEventListener(event, handlerFn);
     return this;
 }
 
@@ -300,4 +457,3 @@ const cssParser = (styles, ...values) => {
 
     return className;
 };
-
