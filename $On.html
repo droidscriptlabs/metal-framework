@@ -1,0 +1,92 @@
+
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<title>Material</title> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <style type="text/css">
+        </style>
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="a">
+
+	<div data-role="header" data-position="fixed">
+		<a href='#' class='ui-btn-left' data-icon='arrow-l' data-theme="c" onclick="history.back(); return false">Back</a> 
+		<h1>$On</h1>
+	</div>
+
+	<div data-role="content">	
+				
+		<style>
+			.jump { line-height:1.5em;  }
+		</style>
+
+		<script>
+		function OpenUrl( url,type,choose )
+		{
+			if( navigator.userAgent.indexOf("Android")>-1 ) {
+				prompt( "#", "App.OpenUrl(\f"+url+"\f"+type+"\f"+choose );
+				return false;
+			}
+			else return true;
+		}
+		</script>
+		
+		<p>
+		   The <b>`$on`</b> function lets you set an event listener that is bound to the
+		   document.
+		</p>
+		
+		<div class="samp">&nbsp;$on('visibilitychange', Fn)</div>
+		
+		<p>
+		   Here is an example featuring an onPause like event:
+		</p>
+		
+		<div
+                    data-role="collapsible"
+                    data-collapsed="true"
+                    data-mini="true"
+                    data-theme="a"
+                    data-content-theme="b"
+                >
+                    <h3>Example - $on</h3>
+                    <div id="main" class="code-js" style="font-size: 70%">
+                        <br />app.LoadPlugin('Metro')<br />
+                        <b id="cfg">cfg.Portrait</b><br /><br />
+                            class Main extends App {<br />
+
+                            &nbsp;&nbsp;onStart() {<br />
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.layMain = ui.addLayout("main", "linear", "fillxy,vcenter");<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02, 0.02, 0.02, 0.02);<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.txt = ui.addText(this.layMain, "My Hybrid App");<br /><br />
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.btn = ui.addButton(this.layMain, "My Button", "primary");<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;$on('visibilitychange', this.onPause)<br />
+                            &nbsp;&nbsp;}<br /><br />
+                            
+                            &nbsp;&nbsp;onPause() {<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.txt.text = 'You left the app bro !'<br />
+                            &nbsp;&nbsp;}
+                            }<br />
+                        </b>
+                    </div>
+                    <div name="divCopy" align="right">
+                        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy('main')"
+                            >Copy All</a
+                        >
+                        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo('main')"
+                            >&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a
+                        >
+                    </div>
+                </div>
+	</div>
+	
+</div>
+
+</body>
+</html>

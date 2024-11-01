@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Material</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style type="text/css"></style>
+    </head>
+
+    <body>
+        <div data-role="page" data-theme="a">
+            <div data-role="header" data-position="fixed">
+                <a
+                    href="#"
+                    class="ui-btn-left"
+                    data-icon="arrow-l"
+                    data-theme="c"
+                    onclick="history.back(); return false"
+                    >Back</a
+                >
+                <h1>$component</h1>
+            </div>
+
+            <div data-role="content">
+                <style>
+                    .jump {
+                        line-height: 1.5em;
+                    }
+                </style>
+
+                <script>
+                    function OpenUrl(url, type, choose) {
+                        if (navigator.userAgent.indexOf("Android") > -1) {
+                            prompt(
+                                "#",
+                                "App.OpenUrl(\f" +
+                                    url +
+                                    "\f" +
+                                    type +
+                                    "\f" +
+                                    choose
+                            );
+                            return false;
+                        } else return true;
+                    }
+                </script>
+
+                <p>
+                    The <b>`$component`</b> function lets you author your own
+                    components without having to write verbose class code.
+                </p>
+
+                <p>
+                    After that you will be exposed to the batch and css methods.
+                </p>
+
+                <div class="samp">
+                    &nbsp;$component(parent, tag, width, height, properties,
+                    options)
+                </div>
+
+                <p>
+                    The properties param is an object that contains the
+                    properties of the html element and use direct dom access. So
+                    you can use DOM Api's like textContent.
+                </p>
+                <p>Here is an example:</p>
+
+                <div
+                    data-role="collapsible"
+                    data-collapsed="true"
+                    data-mini="true"
+                    data-theme="a"
+                    data-content-theme="b"
+                >
+                    <h3>Example - $component</h3>
+                    <div id="main" class="code-js" style="font-size: 70%">
+                        <br />app.LoadPlugin('Metro')<br />
+                        <b id="cfg">cfg.Portrait</b><br /><br />
+
+                        class Main extends App {<br />
+                        &nbsp;&nbsp;constructor() {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;super();<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain =
+                        ui.addLayout("main", "linear", "fillxy,vcenter");<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.txt =
+                        ui.addText(this.layMain, "My Hybrid app");<br />
+                        &nbsp;&nbsp;}<br /><br />
+
+                        &nbsp;&nbsp;onStart() {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02,
+                        0.02, 0.02, 0.02);<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;let btn =
+                        ui.addButton(this.layMain, "My Button", "primary");<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;let outlinebtn =
+                        $component(this.layMain, "button", -1, -1, {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textContent: "Hello
+                        World",<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}).css`<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;border: 2px solid #6200ea;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;color: #6200ea;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;background-color:
+                        transparent;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;font-family: "Archivo",
+                        sans-serif;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;font-weight: 500;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;font-size: 1rem;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;text-align: center;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;cursor: pointer;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;padding: 0.5rem 1rem;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;transition: background-color
+                        0.3s, color 0.3s;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&:hover {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color:
+                        #6200ea;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color:
+                        white;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;&:active {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color:
+                        #3700b3;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border-color:
+                        #3700b3;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}`.on("click", function (e) {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.stopPropagation();<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ui.showPopup("Clicked
+                        Custom Button");<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;});<br /><br />
+
+                        &nbsp;&nbsp;}<br />
+                        }<br />
+                    </div>
+
+                    <div name="divCopy" align="right">
+                        <a
+                            href="#"
+                            data-role="button"
+                            data-mini="true"
+                            data-inline="true"
+                            onclick="copy('main')"
+                            >Copy All</a
+                        >
+                        <a
+                            href="#"
+                            data-role="button"
+                            data-mini="true"
+                            data-inline="true"
+                            onclick="demo('main')"
+                            >&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

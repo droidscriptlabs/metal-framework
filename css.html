@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Material</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style type="text/css"></style>
+    </head>
+
+    <body>
+        <div data-role="page" data-theme="a">
+            <div data-role="header" data-position="fixed">
+                <a
+                    href="#"
+                    class="ui-btn-left"
+                    data-icon="arrow-l"
+                    data-theme="c"
+                    onclick="history.back(); return false"
+                    >Back</a
+                >
+                <h1>.css</h1>
+            </div>
+
+            <div data-role="content">
+                <style>
+                    .jump {
+                        line-height: 1.5em;
+                    }
+                </style>
+
+                <script>
+                    function OpenUrl(url, type, choose) {
+                        if (navigator.userAgent.indexOf("Android") > -1) {
+                            prompt(
+                                "#",
+                                "App.OpenUrl(\f" +
+                                    url +
+                                    "\f" +
+                                    type +
+                                    "\f" +
+                                    choose
+                            );
+                            return false;
+                        } else return true;
+                    }
+                </script>
+
+                <p>
+                    The <b>`.css`</b> function lets you add css to your element
+                    as a template literall or as an object.
+                </p>
+
+                <p>
+                    This method only works in elements made using :
+                    addHTMLElement and $component
+                </p>
+
+                <div class="samp">&nbsp;this.btn.css``</div>
+
+                <p>Here is an example of using scoped css:</p>
+
+                <div
+                    data-role="collapsible"
+                    data-collapsed="true"
+                    data-mini="true"
+                    data-theme="a"
+                    data-content-theme="b"
+                >
+                    <h3>Example - css</h3>
+                    <div id="main" class="code-js" style="font-size: 70%">
+                        <br />app.LoadPlugin('Metro')<br />
+                        cfg.Portrait<br /><br />
+
+                        class Main extends App {<br />
+                        &nbsp;&nbsp;constructor() {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;super();<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain =
+                        ui.addLayout("main", "linear", "fillxy,vcenter");<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.txt =
+                        ui.addText(this.layMain, "Adding css");<br />
+                        &nbsp;&nbsp;}<br /><br />
+
+                        &nbsp;&nbsp;onStart() {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02,
+                        0.02, 0.02, 0.02);<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;let outlinebtnA =
+                        $component(this.layMain, "button", -1, -1, {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textContent: "Button
+                        A",<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}).css`<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;border: 2px solid #6200ea;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;color: #6200ea;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;background-color:
+                        transparent;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;font-family: "Archivo",
+                        sans-serif;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;font-weight: 500;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;font-size: 1rem;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;text-align: center;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;cursor: pointer;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;padding: 0.5rem 1rem;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;transition: background-color
+                        0.3s, color 0.3s;<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;&:hover {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color:
+                        #6200ea;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color: white;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;&:active {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color:
+                        #3700b3;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border-color:
+                        #3700b3;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}`.on("click", function (e) {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.stopPropagation();<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ui.showPopup("Clicked
+                        Custom Button");<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;});<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;//Another Example Of Same Thing
+                        But Using addHTMLElement Fn<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;let outlinebtnB =
+                        ui.addHTMLElement(this.layMain, 'button', '', -1,
+                        -1);<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;outlinebtnB.batch({<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textContent: 'Button
+                        B'<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;})<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;outlinebtnB.css({<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"border": "2px solid
+                        #6200ea",<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"color": "#6200ea",<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"background-color":
+                        "transparent",<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"font-family": `"Archivo",
+                        sans-serif`,<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"font-weight": 500,<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"font-size": '1rem',<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"text-align": 'center',<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"cursor": "pointer",<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"padding": '0.5rem 1rem',<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;"transition": 'background-color
+                        0.3s, color 0.3s',<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;"&:hover": {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"background-color":
+                        '#6200ea',<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"color": 'white'<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;},<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;"&:active": {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"background-color":
+                        '#3700b3',<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"border-color":
+                        '#3700b3'<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}})<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;outlinebtnB.on("click", function
+                        (e) {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.stopPropagation();<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ui.showPopup("Clicked
+                        Custom Button");<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;});<br />
+                        &nbsp;&nbsp;}<br />
+                        }<br />
+                    </div>
+
+                    <div name="divCopy" align="right">
+                        <a
+                            href="#"
+                            data-role="button"
+                            data-mini="true"
+                            data-inline="true"
+                            onclick="copy('main')"
+                            >Copy All</a
+                        >
+                        <a
+                            href="#"
+                            data-role="button"
+                            data-mini="true"
+                            data-inline="true"
+                            onclick="demo('main')"
+                            >&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

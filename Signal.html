@@ -1,0 +1,109 @@
+
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<title>Material</title> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <style type="text/css">
+        </style>
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="a">
+
+	<div data-role="header" data-position="fixed">
+		<a href='#' class='ui-btn-left' data-icon='arrow-l' data-theme="c" onclick="history.back(); return false">Back</a> 
+		<h1>$signal</h1>
+	</div>
+
+	<div data-role="content">	
+				
+		<style>
+			.jump { line-height:1.5em;  }
+		</style>
+
+		<script>
+		function OpenUrl( url,type,choose )
+		{
+			if( navigator.userAgent.indexOf("Android")>-1 ) {
+				prompt( "#", "App.OpenUrl(\f"+url+"\f"+type+"\f"+choose );
+				return false;
+			}
+			else return true;
+		}
+		</script>
+		
+		<p>
+		   The <b>`$signal`</b> function lets you set signals to your variables and
+		   subscribe to value changes and set values.
+		</p>
+		
+		<p>
+		   The <b>`$signal`</b> function returns a setter/getter and a subscribe function.
+		</p>
+		
+		<div class="samp">&nbsp;let theme = $signal('light')</div>
+		
+		<p>
+		   Here is an example featuring a theme based signal:
+		</p>
+		
+		<div
+                    data-role="collapsible"
+                    data-collapsed="true"
+                    data-mini="true"
+                    data-theme="a"
+                    data-content-theme="b"
+                >
+                    <h3>Example - $signal</h3>
+                    <div id="main" class="code-js" style="font-size: 70%">
+                        <br />app.LoadPlugin('Metro')<br />
+                        <b id="cfg">cfg.Portrait</b><br /><br />
+                            class Main extends App {<br />
+                            &nbsp;&nbsp;constructor() {<br />
+                            &nbsp;&nbsp;&nbsp;super()<br />
+                            &nbsp;&nbsp;&nbsp;this.theme = $signal('light')<br />
+                            &nbsp;&nbsp;&nbsp;this.theme.subscribe(this.onTheme)<br />
+                            &nbsp;&nbsp;}<br />
+                            
+                            &nbsp;&nbsp;onStart() {<br />
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.layMain = ui.addLayout("main", "linear", "fillxy,vcenter");<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02, 0.02, 0.02, 0.02);<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.txt = ui.addText(this.layMain, "My Hybrid App");<br /><br />
+                            
+                            
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.btn = ui.addButton(this.layMain, "Switch Theme", "primary");<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;this.btn.on('click', this.onClick)<br />
+                            &nbsp;&nbsp;}<br /><br />
+                            
+                            &nbsp;&nbsp;onTheme(theme) {<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;ui.setTheme(theme)
+                            &nbsp;&nbsp;}<br />
+                            
+                            &nbsp;&nbsp;onClick(e) {<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;e.stopPropagation()<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;if (this.theme.value === 'light') {<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.theme.value = 'dark'<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;} else this.theme.value = 'light';<br />
+                            &nbsp;&nbsp;}<br />
+                            }<br />
+                        </b>
+                    </div>
+                    <div name="divCopy" align="right">
+                        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="copy('main')"
+                            >Copy All</a
+                        >
+                        <a href="#" data-role="button" data-mini="true" data-inline="true" onclick="demo('main')"
+                            >&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a
+                        >
+                    </div>
+                </div>
+	</div>
+	
+</div>
+
+</body>
+</html>
