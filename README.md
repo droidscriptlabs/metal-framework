@@ -1,9 +1,14 @@
 # 🔥 Metro
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.4-brightgreen.svg)](CHANGELOG.md)
-[![Platform](https://img.shields.io/badge/platform-Android-blue.svg)](https://developer.android.com/)
+<div align="center"><img src="Img/Metro.png" width="100" /></div>
 
+<div align="center">
+<img alt="MIT Licensed" src="https://img.shields.io/badge/license-MIT-blue.svg">
+<img alt="Version Badge" src="https://img.shields.io/badge/version-0.0.4-brightgreen.svg">
+<img alt="DroidScript Plugin" src="https://img.shields.io/badge/platform-Android-blue.svg">
+</div>
+
+<br>
 Metro is a DroidScript plugin for Enjine.IO Apps, It is a support plugin for hybrid apps, it is a collection of useful functions to enhance your hybrid apps.
 
 ## Installation
