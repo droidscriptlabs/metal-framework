@@ -1,36 +1,25 @@
-ide.MakePlugin("Metro");
-ui.script("Metro.js");
+app.LoadPlugin("Metro");
 cfg.Portrait;
 
 class Main extends App {
     constructor() {
         super();
-        this.localize = $localize("en", {
-            en: {
-                greeting: "Hello, {name}!",
-                farewell: "Goodbye!",
-            },
-            fr: {
-                greeting: "Bonjour, {name}!",
-                farewell: "Au revoir!",
-            },
-            tn: {
-                greeting: "Dumela, {name}!",
-                farewell: "Tsamaya sentle!",
-            },
-        });
         this.layMain = ui.addLayout("main", "linear", "fillxy,vcenter");
-        this.txt = ui.addText(this.layMain);
-        this.txt.localizedText(this.localize, "greeting", { name: "Oarabile" });
+        this.txt = ui.addText(this.layMain, null, "body1, Left", 0.9);
+        this.txt.backColor = "#e0e0e0";
+        this.txt2 = ui.addText(this.layMain, null, "body1, Left", 0.9);
+        this.txt2.backColor = "#e0e0e0";
     }
 
-    loadData() {
-        // Simulate an async operation using a Promise
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                resolve("Data loaded successfully!");
-            }, 1000);
-        });
+    async loadData() {
+        try {
+            await $localize(
+                "en",
+                "https://raw.githubusercontent.com/oarabiledev/metro/main/translations.json"
+            );
+        } catch (error) {
+            console.log("Failed to load translation data:", error);
+        }
     }
 
     onStart() {
@@ -43,21 +32,14 @@ class Main extends App {
             0.7
         );
 
-        let btn = ui.addButton(this.layMain, "My Button", "primary");
-
-        let theme = $signal("light");
-
-        theme.subscribe((output) => {
-            ui.setTheme(output);
-        });
-
-        let btn2 = ui.addButton(this.layMain, "My Second Button", "outlined");
+        let btn2 = ui.addButton(this.layMain, "Change To French", "outlined");
         btn2.setOnTouch(() => {
-            this.localize.setLanguage("fr");
+            $setLanguage("fr");
+            ui.showPopup("Changed Language To French");
         });
 
         let outlinebtn = $component(this.layMain, "button", -1, -1, {
-            textContent: "Hello World",
+            textContent: "Change To Setswana",
         }).css`
         border: 2px solid #6200ea;
         color: #6200ea;
@@ -80,53 +62,13 @@ class Main extends App {
             border-color: #3700b3; 
         }`.on("click", (e) => {
             e.stopPropagation();
-            this.localize.setLanguage("tn");
-        });
-
-        // Another Example Of Same Thing But Using addHTMLElemnt Fn
-
-        let outlinebtnB = ui.addHTMLElement(this.layMain, "button", "", -1, -1);
-        outlinebtnB.batch({
-            textContent: "Button B",
-        });
-        outlinebtnB.css({
-            border: "2px solid #6200ea",
-            color: "#6200ea",
-            "background-color": "transparent",
-            "font-family": `"Archivo", sans-serif`,
-            "font-weight": 500,
-            "font-size": "1rem",
-            "text-align": "center",
-            cursor: "pointer",
-            padding: "0.5rem 1rem",
-            transition: "background-color 0.3s, color 0.3s",
-
-            "&:hover": {
-                "background-color": "#6200ea",
-                color: "white",
-            },
-
-            "&:active": {
-                "background-color": "#3700b3",
-                "border-color": "#3700b3",
-            },
-        });
-
-        outlinebtnB.on("click", (e) => {
-            e.stopPropagation();
-            ui.showPopup("Clicked Custom Button");
+            $setLanguage("tn");
+            ui.showPopup("Changed Language To Setswana");
         });
 
         $suspense(this.loadData, prog, this.layMain).effects(() => {
-            //Effects like showIF must always be wrapped in this function to make
-            //Them work
-            $showIF(true, outlinebtn, btn);
-        });
-
-        $on("visibilitychange", () => {
-            document.hidden
-                ? (this.txt.text = "You Fired an OnPause Like Event 🔥")
-                : null;
+            this.txt.localizedText("greeting", { name: "Oarabile" });
+            this.txt2.localizedText("speech");
         });
     }
 }

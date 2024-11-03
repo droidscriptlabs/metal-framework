@@ -1,0 +1,190 @@
+=
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Material</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style type="text/css"></style>
+    </head>
+
+    <body>
+        <div data-role="page" data-theme="a">
+            <div data-role="header" data-position="fixed">
+                <a
+                    href="#"
+                    class="ui-btn-left"
+                    data-icon="arrow-l"
+                    data-theme="c"
+                    onclick="history.back(); return false"
+                    >Back</a
+                >
+                <h1>$localize</h1>
+            </div>
+
+            <div data-role="content">
+                <style>
+                    .jump {
+                        line-height: 1.5em;
+                    }
+                </style>
+
+                <script>
+                    function OpenUrl(url, type, choose) {
+                        if (navigator.userAgent.indexOf("Android") > -1) {
+                            prompt(
+                                "#",
+                                "App.OpenUrl(\f" +
+                                    url +
+                                    "\f" +
+                                    type +
+                                    "\f" +
+                                    choose
+                            );
+                            return false;
+                        } else return true;
+                    }
+                </script>
+
+                <p>
+                    The <b>`$localize`</b> function lets set the default page
+                    language and import a json source of translations.
+                </p>
+
+                <p>
+                    You can add the translations as a url, if you leave the
+                    default language property as null Metro will use the
+                    browsers default, also if your language code.
+                </p>
+
+                <div class="samp">
+                    &nbsp;$localize(defaultLangCode, jsonSource)
+                </div>
+
+                <p>
+                    The next step is to use the <b>localizedText</b> to load the
+                    proper translation, localizedText is signal based therefore
+                    text will auto-update when you switch the language.
+                </p>
+
+                <p>To switch language use:</p>
+
+                <div class="samp">&nbsp;$setLanguage(LangCode)</div>
+
+                <p>An example is here and uses <b>$suspense</b> too:</p>
+
+                <div
+                    data-role="collapsible"
+                    data-collapsed="true"
+                    data-mini="true"
+                    data-theme="a"
+                    data-content-theme="b"
+                >
+                    <h3>Example - Language Switching and Async Data Loading</h3>
+                    <div id="main" class="code-js" style="font-size: 70%">
+                        <br />app.LoadPlugin("Metro");<br />
+                        <b id="cfg">cfg.Portrait</b><br /><br />
+
+                        class Main extends App {<br />
+                        &nbsp;&nbsp;constructor() {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;super();<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain =
+                        ui.addLayout("main", "linear", "fillxy,vcenter");<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.txt =
+                        ui.addText(this.layMain, null, 'body1, Left', 0.9);<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.txt.backColor =
+                        "#e0e0e0";<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.txt2 =
+                        ui.addText(this.layMain, null, 'body1, Left', 0.9);<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.txt2.backColor =
+                        "#e0e0e0";<br />
+                        &nbsp;&nbsp;}<br /><br />
+
+                        &nbsp;&nbsp;async loadData() {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;try {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;await
+                        $localize('en',
+                        'https://raw.githubusercontent.com/oarabiledev/metro/main/translations.json');<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;} catch (error) {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log("Failed
+                        to load translation data:", error);<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+                        &nbsp;&nbsp;}<br /><br />
+
+                        &nbsp;&nbsp;onStart() {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;this.layMain.setChildMargins(0.02,
+                        0.02, 0.02, 0.02);<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;let prog =
+                        ui.addProgress(this.layMain, null,
+                        "Linear,Secondary,indeterminate", 0.7);<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;let btn2 =
+                        ui.addButton(this.layMain, "Change To French",
+                        "outlined");<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;btn2.setOnTouch(() => {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$setLanguage('fr');<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ui.showPopup('Changed
+                        Language To French');<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;});<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;let outlinebtn =
+                        $component(this.layMain, "button", -1, -1, {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;textContent: "Change
+                        To Setswana",<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;}).css`<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border: 2px solid
+                        #6200ea;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color: #6200ea;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color:
+                        transparent;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font-family:
+                        "Archivo", sans-serif;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font-weight: 500;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font-size: 1rem;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text-align:
+                        center;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor: pointer;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;padding: 0.5rem
+                        1rem;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transition:
+                        background-color 0.3s, color 0.3s;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`.on("click", (e) =>
+                        {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e.stopPropagation();<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$setLanguage('tn');<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ui.showPopup('Changed
+                        Language To Setswana');<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;});<br /><br />
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;$suspense(this.loadData, prog,
+                        this.layMain).effects(() => {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.txt.localizedText('greeting',
+                        { name: 'Oarabile' });<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.txt2.localizedText('speech');<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;});<br />
+                        &nbsp;&nbsp;}<br />
+                        }<br />
+                    </div>
+                    <div name="divCopy" align="right">
+                        <a
+                            href="#"
+                            data-role="button"
+                            data-mini="true"
+                            data-inline="true"
+                            onclick="copy('main')"
+                            >Copy All</a
+                        >
+                        <a
+                            href="#"
+                            data-role="button"
+                            data-mini="true"
+                            data-inline="true"
+                            onclick="demo('main')"
+                            >&nbsp;&nbsp;&nbsp;Run&nbsp;&nbsp;&nbsp;</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
