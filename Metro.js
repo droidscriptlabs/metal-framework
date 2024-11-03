@@ -31,6 +31,87 @@ $on = function (event, handlerFn) {
     document.addEventListener(event, handlerFn);
 };
 
+const defaultLanguage = navigator.language || navigator.userLanguage;
+const defaultLangCode = defaultLanguage.split("-")[0];
+
+/**
+ * create a localization instance
+ * @param {} defaultLang = defaultLangCode 
+ * @param {} translations = {} 
+ */
+$localize = function (defaultLang = defaultLangCode, translations = {}) {
+    let currentLang = $signal(defaultLang);
+    const loadTranslation = async function (langCode, jsonSource) {
+        if (typeof jsonSource == "string") {
+            const response = await fetch(jsonSource);
+            if (!response.ok) {
+                console.log("Translation File Not Loaded");
+            } else {
+                translations[langCode] = await response.json();
+            }
+        } else if (typeof source === "object") {
+            translations[langCode] = source;
+        }
+        currentLang.value = langCode;
+    };
+
+    const setLanguage = function (langCode) {
+        currentLang.value = langCode;
+    };
+
+    const text = function (key, placeholders) {
+        const langData = translations[currentLang.value] || translations[defaultLang] || {};
+        let translation = langData[key] || key;
+
+        if (placeholders) {
+            Object.keys(placeholders).forEach((placeholder) => {
+                translation = translation.replace(
+                    `{${placeholder}}`,
+                    placeholders[placeholder],
+                );
+            });
+        }
+        return translation;
+    };
+    
+    const subscribe = function(Fn){
+        currentLang.subscribe((newCode)=>{
+            Fn(newCode)
+        })
+    }
+
+    return {
+        loadTranslation,
+        setLanguage,
+        subscribe,
+        text,
+    };
+};
+
+/**
+ * set the text accordingly to the languageCode and provided keys
+ * @param {object} localizingFn 
+ * @param {string} key 
+ * @param {object} placeholders 
+ */
+ui.Control.prototype.localizedText = function(localizingFn, key, placeholders){
+    // localizingFn.text can be null but localizingFn.textContent must not, and vise-versa
+    if (typeof localizingFn !== 'object' || localizingFn === null || (localizingFn.text == undefined && localizingFn.textContent == undefined)) {
+        ui.showPopup(`Ensure localizingFn is a ui object or not null`, 'long');
+        return;
+    }
+    
+    this.tag ? this.textContent = localizingFn.text(key, placeholders) : this.text = localizingFn.text(key, placeholders);
+    
+    localizingFn.subscribe((lang)=>{
+        if (!this.tag){
+            this.text = localizingFn.text(key, placeholders);
+        } else {
+            this.textContent = localizingFn.text(key, placeholders);
+        }
+    })
+}
+
 /**
  * showIF method allows you to hide or show an element if the restingParameter is truthy
  * @param {Boolean} restingParameter
@@ -39,11 +120,7 @@ $on = function (event, handlerFn) {
  */
 $showIF = function (restingParameter, onTruthyElement, onFalseyElement) {
     if (onTruthyElement === undefined || onFalseyElement === undefined) {
-        ui.showPopup(
-            `showIF not called, one of the elements is undefined`,
-            "long",
-            4500
-        );
+        ui.showPopup(`showIF not called, one of the elements is undefined`, "long", 4500);
         return;
     }
     restingParameter ? onTruthyElement.show() : onTruthyElement.hide();
@@ -164,18 +241,12 @@ const $suspense = (resource, fallback, controlInSuspension) => {
 
     if (controlInSuspension.type === "Layout") {
         if (!controlInSuspension.hasChild(fallback)) {
-            ui.showPopup(
-                `FallBack is not a child of ${controlInSuspension}`,
-                "Long",
-                "4500"
-            );
+            ui.showPopup(`FallBack is not a child of ${controlInSuspension}`, "Long", "4500");
             return;
         }
 
         const fallback_id = fallback._id;
-        const incremented_children_array = Object.keys(
-            controlInSuspension.children
-        )
+        const incremented_children_array = Object.keys(controlInSuspension.children)
             .map(Number)
             .map((childId) => childId + 1);
 
@@ -325,9 +396,7 @@ $disableDrag = function (object, moveToOldPosition) {
     object.el.removeEventListener("touchstart", object.el._touchHandler);
     delete object.el._touchStartHandler;
 
-    moveToOldPosition
-        ? (object.el.style.position = draggingElprops.position)
-        : null;
+    moveToOldPosition ? (object.el.style.position = draggingElprops.position) : null;
 };
 
 // Handle touch movement
@@ -403,9 +472,7 @@ ui.Control.prototype.move = function (left, top, duration, delay = 0) {
                 this._div.style.position = `absolute`;
                 this._div.style.transform = `translate(${left}px, ${top}px)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -425,9 +492,7 @@ ui.Control.prototype.positionX = function (left, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `translateX(${left}px)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -447,9 +512,7 @@ ui.Control.prototype.positionY = function (top, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `translateY(${top}px)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -469,9 +532,7 @@ ui.Control.prototype.rotate = function (angle, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `rotate(${angle}deg)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -491,9 +552,7 @@ ui.Control.prototype.rotateX = function (angle, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `rotateX(${angle}deg)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -513,9 +572,7 @@ ui.Control.prototype.rotateY = function (angle, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `rotateY(${angle}deg)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -536,9 +593,7 @@ ui.Control.prototype.scale = function (x, y, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `scale(${x}, ${y})`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -558,9 +613,7 @@ ui.Control.prototype.scaleX = function (x, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `scaleX(${x})`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -580,9 +633,7 @@ ui.Control.prototype.scaleY = function (y, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `scaleY(${y})`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -656,9 +707,7 @@ ui.Control.prototype.translate = function (left, top, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `translate(${left}px, ${top}px)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -678,9 +727,7 @@ ui.Control.prototype.translateX = function (left, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `translateX(${left}px)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -700,9 +747,7 @@ ui.Control.prototype.translateY = function (top, duration, delay = 0) {
             setTimeout(() => {
                 this._div.style.transform = `translateY(${top}px)`;
                 this._div.style.transition = `transform ${duration}ms`;
-                this._div.addEventListener("transitionend", () => resolve(), {
-                    once: true,
-                });
+                this._div.addEventListener("transitionend", () => resolve(), { once: true });
             }, delay);
         });
     });
@@ -756,6 +801,15 @@ ui.Control.prototype.on = function (event, handlerFn) {
 };
 
 /**
+ * remove an event listener to your element
+ * @param {HTMLEventListener} event
+ * @param {Function} handlerFn
+ */
+ui.Control.prototype.off = function (event, handlerFn) {
+    this._div.removeEventListener(event, handlerFn);
+    return this;
+};
+/**
  * add styles to an element as a template literal or an object
  * @param {object | TemplateStringsArray} styles
  * @returns {this}
@@ -769,11 +823,7 @@ ui.Control.prototype.css = function (styles) {
 
     if (this.tag) this.classList.add(className);
     else {
-        ui.showPopup(
-            "Cannot add css any to ui Object, use ui.addHTMLElement",
-            "Long",
-            4500
-        );
+        ui.showPopup("Cannot add css any to ui Object, use ui.addHTMLElement", "Long", 4500);
         return;
     }
     return this;
@@ -796,9 +846,7 @@ function generateClassName() {
  */
 const cssParser = (styles, ...values) => {
     const className = generateClassName();
-    const styleSheet = document.head.appendChild(
-        document.createElement("style")
-    ).sheet;
+    const styleSheet = document.head.appendChild(document.createElement("style")).sheet;
 
     let cssString = "";
 
@@ -845,9 +893,7 @@ const cssParser = (styles, ...values) => {
                     });
                 }
             } else {
-                baseStyles += `${key
-                    .replace(/([A-Z])/g, "-$1")
-                    .toLowerCase()}: ${value}; `;
+                baseStyles += `${key.replace(/([A-Z])/g, "-$1").toLowerCase()}: ${value}; `;
             }
         });
         return baseStyles;
@@ -866,10 +912,7 @@ const cssParser = (styles, ...values) => {
 
     // Insert base class CSS rule
     if (cssString) {
-        styleSheet.insertRule(
-            `.${className} { ${cssString} }`,
-            styleSheet.cssRules.length
-        );
+        styleSheet.insertRule(`.${className} { ${cssString} }`, styleSheet.cssRules.length);
     }
 
     // Insert nested CSS rules

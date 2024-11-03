@@ -5,8 +5,23 @@ cfg.Portrait;
 class Main extends App {
     constructor() {
         super();
+        this.localize = $localize("en", {
+            en: {
+                greeting: "Hello, {name}!",
+                farewell: "Goodbye!",
+            },
+            fr: {
+                greeting: "Bonjour, {name}!",
+                farewell: "Au revoir!",
+            },
+            tn: {
+                greeting: "Dumela, {name}!",
+                farewell: "Tsamaya sentle!",
+            },
+        });
         this.layMain = ui.addLayout("main", "linear", "fillxy,vcenter");
-        this.txt = ui.addText(this.layMain, "My Hybrid app");
+        this.txt = ui.addText(this.layMain);
+        this.txt.localizedText(this.localize, "greeting", { name: "Oarabile" });
     }
 
     loadData() {
@@ -14,7 +29,7 @@ class Main extends App {
         return new Promise(function (resolve, reject) {
             setTimeout(function () {
                 resolve("Data loaded successfully!");
-            }, 100);
+            }, 1000);
         });
     }
 
@@ -37,12 +52,8 @@ class Main extends App {
         });
 
         let btn2 = ui.addButton(this.layMain, "My Second Button", "outlined");
-        btn2.setOnTouch(function () {
-            btn2.createAnimSequence()
-                .move(250, 350, 1500, 0)
-                .then()
-                .rotate(50, 1500, 3000)
-                .start();
+        btn2.setOnTouch(() => {
+            this.localize.setLanguage("fr");
         });
 
         let outlinebtn = $component(this.layMain, "button", -1, -1, {
@@ -67,44 +78,44 @@ class Main extends App {
         &:active {
             background-color: #3700b3; 
             border-color: #3700b3; 
-        }`.on("click", function (e) {
+        }`.on("click", (e) => {
             e.stopPropagation();
-            ui.showPopup("Clicked Custom Button");
+            this.localize.setLanguage("tn");
         });
 
         // Another Example Of Same Thing But Using addHTMLElemnt Fn
 
-        // let outlinebtn = ui.addHTMLElement(this.layMain, 'button', '', -1, -1);
-        // outlinebtn.batch({
-        //     textContent: 'Hello World'
-        // })
-        // outlinebtn.css`
-        // border: 2px solid #6200ea;
-        // color: #6200ea;
-        // background-color: transparent;
-        // font-family: "Archivo", sans-serif;
-        // font-weight: 500;
-        // font-size: 1rem;
-        // text-align: center;
-        // cursor: pointer;
-        // padding: 0.5rem 1rem;
-        // transition: background-color 0.3s, color 0.3s;
+        let outlinebtnB = ui.addHTMLElement(this.layMain, "button", "", -1, -1);
+        outlinebtnB.batch({
+            textContent: "Button B",
+        });
+        outlinebtnB.css({
+            border: "2px solid #6200ea",
+            color: "#6200ea",
+            "background-color": "transparent",
+            "font-family": `"Archivo", sans-serif`,
+            "font-weight": 500,
+            "font-size": "1rem",
+            "text-align": "center",
+            cursor: "pointer",
+            padding: "0.5rem 1rem",
+            transition: "background-color 0.3s, color 0.3s",
 
-        // &:hover {
-        //     background-color: #6200ea;
-        //     color: white;
-        // }
+            "&:hover": {
+                "background-color": "#6200ea",
+                color: "white",
+            },
 
-        // &:active {
-        //     background-color: #3700b3;
-        //     border-color: #3700b3;
-        // }
-        // `
+            "&:active": {
+                "background-color": "#3700b3",
+                "border-color": "#3700b3",
+            },
+        });
 
-        // outlinebtn.on('click', (e)=>{
-        //     e.stopPropagation();
-        //     ui.showPopup("Clicked Custom Button");
-        // })
+        outlinebtnB.on("click", (e) => {
+            e.stopPropagation();
+            ui.showPopup("Clicked Custom Button");
+        });
 
         $suspense(this.loadData, prog, this.layMain).effects(() => {
             //Effects like showIF must always be wrapped in this function to make
