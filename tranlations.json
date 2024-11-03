@@ -1,6 +1,14 @@
 {
+    "en": {
+        "greeting": "Hello, {name}!",
+        "farewell": "GoodBye!"
+    },
     "tn": {
         "greeting": "Dumela, {name}!",
         "farewell": "Tsamaya sentle!"
+    },
+    "fr": {
+        "greeting": "Bonjour, {name}!",
+        "farewell": "Au revoir!"
     }
 }
