@@ -1,14 +1,14 @@
 {
     "en": {
         "greeting": "Hello, {name}!",
-        "farewell": "GoodBye!"
+        "speech": "I hope you love the Metro Plugin, Regards Oarabile 🔥!"
     },
     "tn": {
         "greeting": "Dumela, {name}!",
-        "farewell": "Tsamaya sentle!"
+        "speech": "Ke ka rata fa o ratile Plugin ya Metro, Lefoko le tswa ko go Oarabile 🔥!"
     },
     "fr": {
         "greeting": "Bonjour, {name}!",
-        "farewell": "Au revoir!"
+        "speech": "J'espère que vous aimerez le plugin Metro. Cordialement, Oarabile 🔥 !"
     }
 }
