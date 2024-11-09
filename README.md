@@ -9,7 +9,9 @@
 </div>
 
 <br>
-Metro is a DroidScript plugin for Enjine.IO Apps, It is a support plugin for hybrid apps, it is a collection of useful functions to enhance your hybrid apps.
+
+Metro is a DroidScript plugin for Enjine.IO Apps, It is a support plugin for hybrid apps, it is a collection of useful functions to enhance your hybrid apps, powered by 
+[rosana.js](https://github.com/oarabiledev/rosana) - a high perfomance ui framework.
 
 ## Installation
 
