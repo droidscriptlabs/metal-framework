@@ -10,6 +10,9 @@
 
 <br>
 
+> This project is refered to as Metro soon to be renamed to Metal,
+> currently updating the docs and re-writing this plugin too. :)
+
 Metro is a DroidScript plugin for Enjine.IO Apps, It is a support plugin for hybrid apps, it is a collection of useful functions to enhance your hybrid apps, powered by 
 [rosana.js](https://github.com/oarabiledev/rosana) - a high perfomance ui framework.
 
